@@ -143,6 +143,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"L={L}");
         Debug.Log($"AD.Q={aq}");
         Debug.Log($"addf={ad.f}");
+        Debug.Log($"addq={ad.q}");
         Debug.Log($"LForce={LForce}");
         Debug.Log($"Linv={Linv}");
         Debug.Log($"ACCEL4={ACCEL4}");
