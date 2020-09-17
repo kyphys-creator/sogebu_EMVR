@@ -140,6 +140,7 @@ public class cameraMove : MonoBehaviour
         //add a latest position to position list
         ppoL.Add(xx4);
 
+        //debugging functions
         Debug.Log($"L={L}");
         Debug.Log($"AD.Q={aq}");
         Debug.Log($"addf={ad.f}");
