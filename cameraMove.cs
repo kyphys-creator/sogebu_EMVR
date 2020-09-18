@@ -119,7 +119,7 @@ public class cameraMove : MonoBehaviour
         LForce = qom * (met * ad.f * u4);
 
         ACCEL4 = new Vector4(ACCEL3.x, ACCEL3.y, ACCEL3.z, 0);
-        accela4 = Linv * ACCEL4 + LForce - u4.normalized * 0.15f;// 0.15f
+        accela4 = Linv * ACCEL4 + LForce - u4.normalized * 0.01f;// 0.15f
         accela3 = new Vector3(accela4.x, accela4.y, accela4.z);
 
         u3 += accela3 * Time.deltaTime;
