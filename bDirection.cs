@@ -46,8 +46,8 @@ public class bDirection : MonoBehaviour
         Rzero = tmp;
         rzero = tmp2;
         //Electric charge of the point source.
-        q1 = 2.0f;
-        q2 = 2.0f;
+        q1 = 0.0f;
+        q2 = 0.0f;
 
         R = rR(transform.position, Rzero);
         r = rR(transform.position, rzero);
