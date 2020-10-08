@@ -47,6 +47,9 @@ public class Vertex : MonoBehaviour
     Camera cam;
     cameraMove cM;
     private Matrix4x4 l;
+    private Vector4 k;
+    private Vector4 O4;
+    private Vector4 vv;
 
     /**
      * Awake.
@@ -60,22 +63,21 @@ public class Vertex : MonoBehaviour
         this.meshFilter = this.GetComponent<MeshFilter>();
         this.vertices = this.meshFilter.mesh.vertices;
 
+        O4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, 1);
+
         for (int i = 0; i < vertices.Length; ++i)
         {
             Vector3 vertex = vertices[i];
+            vv = new Vector4(vertex.x, vertex.y, vertex.z, - Mathf.Sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
 
             if (!this.originalVertices.Contains(vertex))
             {
+                k = cM.Linv * (O4 - cM.xx4) + vv;
                 this.correspondenceTable[i] = this.originalVertices.Count;
                 this.originalVertices.Add(vertex);
-                this.currentVertices.Add(vertex);
+                this.currentVertices.Add(l * k - (O4 - cM.xx4));
 
-                // ランダムな位置を作る
-                this.targetlVertices.Add(new Vector3(
-                    vertex.x + Random.Range(-this.swingDistance, this.swingDistance),
-                    vertex.y + Random.Range(-this.swingDistance, this.swingDistance),
-                    vertex.z + Random.Range(-this.swingDistance, this.swingDistance)
-                ));
+                this.targetlVertices.Add(l * k - (O4 - cM.xx4));
             }
             else
             {
@@ -94,6 +96,7 @@ public class Vertex : MonoBehaviour
      */
     public void Update()
     {
+        l = cM.L;
         // 現在位置の更新
         for (int i = 0; i < this.currentVertices.Count; ++i)
         {
@@ -101,7 +104,7 @@ public class Vertex : MonoBehaviour
             Vector3 targetPos = this.targetlVertices[i];
             Vector3 currentPos = this.currentVertices[i];
 
-            this.timeGap[i] += Time.deltaTime * 1.6f;
+            this.timeGap[i] += Time.deltaTime * cM.u4.z;
             currentPos = Vector3.Slerp(originalPos, targetPos, Mathf.PingPong(this.timeGap[i], 1.0f));
 
             this.currentVertices[i] = currentPos;
@@ -113,9 +116,6 @@ public class Vertex : MonoBehaviour
             int vid = this.correspondenceTable[i];
             this.vertices[i] = this.currentVertices[vid];
         }
-
-        // 回転演出
-        this.transform.Rotate(Vector3.up * Time.deltaTime * 12.0f, Space.World);
 
         // 頂点を渡す
         this.meshFilter.mesh.vertices = this.vertices;
