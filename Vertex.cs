@@ -63,7 +63,7 @@ public class Vertex : MonoBehaviour
         this.meshFilter = this.GetComponent<MeshFilter>();
         this.vertices = this.meshFilter.mesh.vertices;
 
-        O4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, 1);
+        O4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -Mathf.Sqrt(this.transform.position.x * this.transform.position.x + this.transform.position.y * this.transform.position.y + this.transform.position.z * this.transform.position.z));
 
         for (int i = 0; i < vertices.Length; ++i)
         {
@@ -74,7 +74,7 @@ public class Vertex : MonoBehaviour
             {
                 k = cM.Linv * (O4 - cM.xx4) + vv;
                 this.correspondenceTable[i] = this.originalVertices.Count;
-                this.originalVertices.Add(vertex);
+                this.originalVertices.Add(l * k - (O4 - cM.xx4));
                 this.currentVertices.Add(l * k - (O4 - cM.xx4));
 
                 this.targetlVertices.Add(l * k - (O4 - cM.xx4));
