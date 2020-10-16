@@ -4,117 +4,77 @@ using UnityEngine;
 
 public class Vertex : MonoBehaviour
 {
-    /**
-     * 揺らぐ距離間。
-     */
-    public float swingDistance = 0.1f;
-
-    /**
-     * MeshFilter.
-     */
+    //MeshFilter
     private MeshFilter meshFilter;
-
-    /**
-     * メッシュデータの頂点。
-     */
+    //Vertices of MeshFilter data
+    private Vector3[] orgvertices;
     private Vector3[] vertices;
-
-    /**
-     * 重複のないオリジナル頂点データ。
-     */
-    private List<Vector3> originalVertices = new List<Vector3>();
-
-    /**
-     * 現在の重複のない頂点データ。
-     */
-    private List<Vector3> currentVertices = new List<Vector3>();
 
     /**
      * 動かす際のターゲットとなる重複のない頂点データ。
      */
-    private List<Vector3> targetlVertices = new List<Vector3>();
-
-    /**
-     * 頂点ごとの時間の差。
-     */
-    private List<float> timeGap = new List<float>();
-
-    /**
-     * 頂点との対応表。
-     */
-    private Dictionary<int, int> correspondenceTable = new Dictionary<int, int>();
+    private List<Vector3> targetVertices = new List<Vector3>();
 
     Camera cam;
+    public GameObject Car;
+    Vector3 carpos3;
+    Vector4 carpos4;
     cameraMove cM;
+    cubeMove cuM;
     private Matrix4x4 l;
-    private Vector4 k;
-    private Vector4 O4;
-    private Vector4 vv;
+    private Vector4 k;//player's rest frame
+    private Vector4 o4;//player's rest frame vector4
+    private Vector4 v4;//world frame vector4
+    private Vector3 x3;//object's world frame position
 
-    /**
-     * Awake.
-     */
     public void Awake()
     {
         cam = Camera.main;
         cM = cam.GetComponent<cameraMove>();
-
+        cuM = this.GetComponent<cubeMove>();
+        carpos3 = Car.transform.position;
+        carpos4 = new Vector4(carpos3.x, carpos3.y, carpos3.z, -carpos3.magnitude);
         l = cM.L;
         this.meshFilter = this.GetComponent<MeshFilter>();
+        this.orgvertices = this.meshFilter.mesh.vertices;
         this.vertices = this.meshFilter.mesh.vertices;
 
-        O4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -Mathf.Sqrt(this.transform.position.x * this.transform.position.x + this.transform.position.y * this.transform.position.y + this.transform.position.z * this.transform.position.z));
-
-        for (int i = 0; i < vertices.Length; ++i)
-        {
-            Vector3 vertex = vertices[i];
-            vv = new Vector4(vertex.x, vertex.y, vertex.z, - Mathf.Sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
-
-            if (!this.originalVertices.Contains(vertex))
-            {
-                k = cM.Linv * (O4 - cM.xx4) + vv;
-                this.correspondenceTable[i] = this.originalVertices.Count;
-                this.originalVertices.Add(l * k - (O4 - cM.xx4));
-                this.currentVertices.Add(l * k - (O4 - cM.xx4));
-
-                this.targetlVertices.Add(l * k - (O4 - cM.xx4));
-            }
-            else
-            {
-                this.correspondenceTable[i] = this.originalVertices.FindIndex(vec => vec == vertex);
-            }
-        }
-
-        for (int i = 0; i < this.originalVertices.Count; ++i)
-        {
-            this.timeGap.Add(Random.Range(0.0f, 1.0f));
-        }
+        o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
+        x3 = cuM.x4;
     }
 
-    /**
-     * Update.
-     */
     public void Update()
     {
-        l = cM.L;
-        // 現在位置の更新
-        for (int i = 0; i < this.currentVertices.Count; ++i)
+        //Object's center point in player's rest frame
+        o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
+        l = cM.L;//world frame to player's rest frame
+        //cM.xx4 is the player's position in player's rest frame
+        for (int i = 0; i < vertices.Length; ++i)
         {
-            Vector3 originalPos = this.originalVertices[i];
-            Vector3 targetPos = this.targetlVertices[i];
-            Vector3 currentPos = this.currentVertices[i];
+            Vector3 vertex = orgvertices[i];
+            Vector3 vv = x3 + vertex;
+            //vv4 in world frame
+            Vector4 vv4 = vv;
+            vv4.w = cM.xx4.w - (cM.xx3 - vv).magnitude;
+            //position of vertices in World Frame4
+            /*if (!this.originalVertices.Contains(vertex))
+            {*/
+            //
+            k = l * vv4;
+            this.targetVertices.Add(new Vector3(k.x, k.y, k.z));
+        }
 
-            this.timeGap[i] += Time.deltaTime * cM.u4.z;
-            currentPos = Vector3.Slerp(originalPos, targetPos, Mathf.PingPong(this.timeGap[i], 1.0f));
-
-            this.currentVertices[i] = currentPos;
+        // 現在位置の更新
+        for (int i = 0; i < this.targetVertices.Count; ++i)
+        {
+            Vector3 targetPos = this.targetVertices[i];
+            this.targetVertices[i] = targetPos;
         }
 
         // verticesに渡す頂点を作成
         for (int i = 0; i < this.vertices.Length; ++i)
         {
-            int vid = this.correspondenceTable[i];
-            this.vertices[i] = this.currentVertices[vid];
+            this.vertices[i] = this.targetVertices[i];
         }
 
         // 頂点を渡す

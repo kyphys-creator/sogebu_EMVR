@@ -14,7 +14,8 @@ public class cameraMove : MonoBehaviour
     public Vector4 u4;
     Vector3 u3hat;
     public Vector4 xx4;
-    Vector4 X3;
+    public Vector3 xx3;
+    public Vector3 X3;
     public Vector4 X4;
     public Matrix4x4 L;
     public Matrix4x4 Linv;
@@ -133,6 +134,7 @@ public class cameraMove : MonoBehaviour
         Shader.SetGlobalMatrix("R", r);
 
         xx4 += u4 * Time.deltaTime;
+        xx3 = xx4;
         X4 = L * xx4;
         X3 = new Vector3(X4.x, X4.y, X4.z);
         transform.position = X3;
