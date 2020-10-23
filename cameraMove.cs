@@ -15,8 +15,8 @@ public class cameraMove : MonoBehaviour
     Vector3 u3hat;
     public Vector4 playrposworldframe4;//xx4
     public Vector3 playrposworldframe3;
-    public Vector3 X3;
-    public Vector4 X4;
+    public Vector3 playrposplayrrestframe3;
+    public Vector4 playrposplayrrestframe4;
     public Matrix4x4 Lplayer;
     public Matrix4x4 Lplayerinverse;
     private float qom;
@@ -26,7 +26,7 @@ public class cameraMove : MonoBehaviour
     ArrowDirection ad;
     public Matrix4x4 R;
     private Matrix4x4 r;
-    public Vector4 LForce;
+    public Vector4 LorentzForceworldframe;
     public List<Vector4> ppoL = new List<Vector4>();
     public Vector4 xint;//intersection of worldline with PLC
 
@@ -93,10 +93,10 @@ public class cameraMove : MonoBehaviour
         Lplayerinverse = Lplayer.inverse;
 
         //LForce is a vector in world coordinate space
-        LForce = qom * (met * ad.f * playrvelworldframe4);
+        LorentzForceworldframe = qom * (met * ad.f * playrvelworldframe4);
 
         playraccelplayrrestframe4 = new Vector4(playraccelplayrrestframe3.x, playraccelplayrrestframe3.y, playraccelplayrrestframe3.z, 0);
-        playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
+        playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LorentzForceworldframe - playrvelworldframe4.normalized * 0.01f;// 0.15f
         playraccelworldframe3 = new Vector3(playraccelworldframe4.x, playraccelworldframe4.y, playraccelworldframe4.z);
 
         playrvelworldframe3 += playraccelworldframe3 * Time.deltaTime;
@@ -111,9 +111,9 @@ public class cameraMove : MonoBehaviour
 
         playrposworldframe4 += playrvelworldframe4 * Time.deltaTime;
         playrposworldframe3 = playrposworldframe4;
-        X4 = Lplayer * playrposworldframe4;
-        X3 = new Vector3(X4.x, X4.y, X4.z);
-        transform.position = X3;
+        playrposplayrrestframe4 = Lplayer * playrposworldframe4;
+        playrposplayrrestframe3 = new Vector3(playrposplayrrestframe4.x, playrposplayrrestframe4.y, playrposplayrrestframe4.z);
+        transform.position = playrposplayrrestframe3;
 
         //add a latest position to position list
         ppoL.Add(playrposworldframe4);
@@ -123,7 +123,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"AD.Q={aq}");
         Debug.Log($"addf={ad.f}");
         Debug.Log($"addq={ad.q}");
-        Debug.Log($"LForce={LForce}");
+        Debug.Log($"LForce={LorentzForceworldframe}");
         Debug.Log($"Linv={Lplayerinverse}");
         Debug.Log($"ACCEL4={playraccelplayrrestframe4}");
         Debug.Log($"accel4={playraccelworldframe4}");
