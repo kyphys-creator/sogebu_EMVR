@@ -13,8 +13,8 @@ public class cameraMove : MonoBehaviour
     public Vector3 playrvelworldframe3;//u3
     public Vector4 playrvelworldframe4;//u4
     Vector3 u3hat;
-    public Vector4 xx4;//xx4
-    public Vector3 xx3;
+    public Vector4 playrposworldframe4;//xx4
+    public Vector3 playrposworldframe3;
     public Vector3 X3;
     public Vector4 X4;
     public Matrix4x4 Lplayer;
@@ -35,7 +35,7 @@ public class cameraMove : MonoBehaviour
     {
         ad = targetObject.GetComponent<ArrowDirection>();
         R = Matrix4x4.identity;
-        xx4 = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0f);
+        playrposworldframe4 = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0f);
         playrvelworldframe3 = new Vector3(0.0f, 0.0f, 0.0f);
         playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, 1f);
         u3hat = playrvelworldframe3.normalized;
@@ -45,7 +45,7 @@ public class cameraMove : MonoBehaviour
         qom = 0.01f;
         aq = ad.q;
         Debug.Log($"Q0={ad.q}");
-        ppoL.Add(xx4);
+        ppoL.Add(playrposworldframe4);
         r = Matrix4x4.identity;
     }
 
@@ -109,14 +109,14 @@ public class cameraMove : MonoBehaviour
         r.m22 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
         Shader.SetGlobalMatrix("R", r);
 
-        xx4 += playrvelworldframe4 * Time.deltaTime;
-        xx3 = xx4;
-        X4 = Lplayer * xx4;
+        playrposworldframe4 += playrvelworldframe4 * Time.deltaTime;
+        playrposworldframe3 = playrposworldframe4;
+        X4 = Lplayer * playrposworldframe4;
         X3 = new Vector3(X4.x, X4.y, X4.z);
         transform.position = X3;
 
         //add a latest position to position list
-        ppoL.Add(xx4);
+        ppoL.Add(playrposworldframe4);
 
         //debugging functions
         Debug.Log($"L={Lplayer}");
@@ -128,7 +128,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"ACCEL4={playraccelplayrrestframe4}");
         Debug.Log($"accel4={playraccelworldframe4}");
         Debug.Log($"u4={playrvelworldframe4}");
-        Debug.Log($"x4 ={xx4}");
+        Debug.Log($"x4 ={playrposworldframe4}");
         Debug.Log($"u4={playrvelworldframe4}");
     }
     public Vector3 vp(Vector3 v1, Vector3 v2) //calculate vectorproduct

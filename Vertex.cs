@@ -55,7 +55,7 @@ public class Vertex : MonoBehaviour
             Vector3 vv = x3 + vertex;
             //vv4 in world frame
             Vector4 vv4 = vv;
-            vv4.w = cM.xx4.w - (cM.xx3 - vv).magnitude;
+            vv4.w = cM.playrposworldframe4.w - (cM.playrposworldframe3 - vv).magnitude;
             //position of vertices in World Frame4
             /*if (!this.originalVertices.Contains(vertex))
             {*/
