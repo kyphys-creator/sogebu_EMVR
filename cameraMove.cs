@@ -10,10 +10,10 @@ public class cameraMove : MonoBehaviour
     Vector4 ACCEL4;
     Vector3 accela3;
     Vector4 accela4;
-    public Vector3 u3;
-    public Vector4 u4;
+    public Vector3 playrvelworldframe;//u3
+    public Vector4 u4;//u4
     Vector3 u3hat;
-    public Vector4 xx4;
+    public Vector4 xx4;//xx4
     public Vector3 xx3;
     public Vector3 X3;
     public Vector4 X4;
@@ -42,9 +42,9 @@ public class cameraMove : MonoBehaviour
         ad = targetObject.GetComponent<ArrowDirection>();
         R = Matrix4x4.identity;
         xx4 = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0f);
-        u3 = new Vector3(0.0f, 0.0f, 0.0f);
-        u4 = new Vector4(u3.x, u3.y, u3.z, 1f);
-        u3hat = u3.normalized;
+        playrvelworldframe = new Vector3(0.0f, 0.0f, 0.0f);
+        u4 = new Vector4(playrvelworldframe.x, playrvelworldframe.y, playrvelworldframe.z, 1f);
+        u3hat = playrvelworldframe.normalized;
         Lplayer = Matrix4x4.identity;
         met = Matrix4x4.identity;
         met.m33 = -1;
@@ -94,7 +94,7 @@ public class cameraMove : MonoBehaviour
         }
 
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
-        Lplayer = LTrans(u3);
+        Lplayer = LTrans(playrvelworldframe);
 
         Lplayerinverse = Lplayer.inverse;
 
@@ -105,14 +105,14 @@ public class cameraMove : MonoBehaviour
         accela4 = Lplayerinverse * ACCEL4 + LForce - u4.normalized * 0.01f;// 0.15f
         accela3 = new Vector3(accela4.x, accela4.y, accela4.z);
 
-        u3 += accela3 * Time.deltaTime;
+        playrvelworldframe += accela3 * Time.deltaTime;
         //u3 *= 0.98f;
-        u4 = new Vector4(u3.x, u3.y, u3.z, Mathf.Sqrt(1f + u3.sqrMagnitude));
-        u3hat = u3.normalized;
+        u4 = new Vector4(playrvelworldframe.x, playrvelworldframe.y, playrvelworldframe.z, Mathf.Sqrt(1f + playrvelworldframe.sqrMagnitude));
+        u3hat = playrvelworldframe.normalized;
 
-        r.m00 = Mathf.Sqrt(1f - u3.sqrMagnitude);
-        r.m11 = Mathf.Sqrt(1f - u3.sqrMagnitude);
-        r.m22 = Mathf.Sqrt(1f - u3.sqrMagnitude);
+        r.m00 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
+        r.m11 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
+        r.m22 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
         Shader.SetGlobalMatrix("R", r);
 
         xx4 += u4 * Time.deltaTime;
