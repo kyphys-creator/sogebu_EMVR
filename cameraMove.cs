@@ -6,10 +6,10 @@ public class cameraMove : MonoBehaviour
 {
     private float unitAccel = 0.1f;
 
-    Vector3 ACCEL3;
-    Vector4 ACCEL4;
-    Vector3 playraccelworldframe3;
-    Vector4 playraccelworldframe4;
+    Vector3 playraccelplayrrestframe3;//ACCEL3
+    Vector4 playraccelplayrrestframe4;//ACCEL4
+    Vector3 playraccelworldframe3;//accela3
+    Vector4 playraccelworldframe4;//accela4
     public Vector3 playrvelworldframe3;//u3
     public Vector4 playrvelworldframe4;//u4
     Vector3 u3hat;
@@ -68,23 +68,23 @@ public class cameraMove : MonoBehaviour
         //Player's Input
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            ACCEL3 = R * Vector3.up * unitAccel;
+            playraccelplayrrestframe3 = R * Vector3.up * unitAccel;
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            ACCEL3 = R * Vector3.down * unitAccel;
+            playraccelplayrrestframe3 = R * Vector3.down * unitAccel;
         }
         else if (Input.GetKey(KeyCode.UpArrow))
         {
-            ACCEL3 = R * Vector3.forward * unitAccel;
+            playraccelplayrrestframe3 = R * Vector3.forward * unitAccel;
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            ACCEL3 = R * Vector3.back * unitAccel;
+            playraccelplayrrestframe3 = R * Vector3.back * unitAccel;
         }
         else
         {
-            ACCEL3 = Vector3.zero;
+            playraccelplayrrestframe3 = Vector3.zero;
         }
 
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
@@ -95,8 +95,8 @@ public class cameraMove : MonoBehaviour
         //LForce is a vector in world coordinate space
         LForce = qom * (met * ad.f * playrvelworldframe4);
 
-        ACCEL4 = new Vector4(ACCEL3.x, ACCEL3.y, ACCEL3.z, 0);
-        playraccelworldframe4 = Lplayerinverse * ACCEL4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
+        playraccelplayrrestframe4 = new Vector4(playraccelplayrrestframe3.x, playraccelplayrrestframe3.y, playraccelplayrrestframe3.z, 0);
+        playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
         playraccelworldframe3 = new Vector3(playraccelworldframe4.x, playraccelworldframe4.y, playraccelworldframe4.z);
 
         playrvelworldframe3 += playraccelworldframe3 * Time.deltaTime;
@@ -125,7 +125,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"addq={ad.q}");
         Debug.Log($"LForce={LForce}");
         Debug.Log($"Linv={Lplayerinverse}");
-        Debug.Log($"ACCEL4={ACCEL4}");
+        Debug.Log($"ACCEL4={playraccelplayrrestframe4}");
         Debug.Log($"accel4={playraccelworldframe4}");
         Debug.Log($"u4={playrvelworldframe4}");
         Debug.Log($"x4 ={xx4}");
