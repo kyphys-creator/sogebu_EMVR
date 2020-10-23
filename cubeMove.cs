@@ -68,7 +68,7 @@ public class cubeMove : MonoBehaviour
         xCam4 = cM.xx4;
         t = lip(n4, x4 - xCam4) - Mathf.Sqrt(Mathf.Pow(lip(n4, x4 - xCam4), 2) + lSqN(x4 - xCam4));
         x4 = x4 + n4 * Time.deltaTime;
-        transform.position = cM.L * x4;
+        transform.position = cM.Lplayer * x4;
         xnorm = xCam4.normalized;
     }
 

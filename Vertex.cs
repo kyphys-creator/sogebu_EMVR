@@ -34,7 +34,7 @@ public class Vertex : MonoBehaviour
         cuM = this.GetComponent<cubeMove>();
         carpos3 = Car.transform.position;
         carpos4 = new Vector4(carpos3.x, carpos3.y, carpos3.z, -carpos3.magnitude);
-        l = cM.L;
+        l = cM.Lplayer;
         this.meshFilter = this.GetComponent<MeshFilter>();
         this.orgvertices = this.meshFilter.mesh.vertices;
         this.vertices = this.meshFilter.mesh.vertices;
@@ -47,7 +47,7 @@ public class Vertex : MonoBehaviour
     {
         //Object's center point in player's rest frame
         o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
-        l = cM.L;//world frame to player's rest frame
+        l = cM.Lplayer;//world frame to player's rest frame
         //cM.xx4 is the player's position in player's rest frame
         for (int i = 0; i < vertices.Length; ++i)
         {

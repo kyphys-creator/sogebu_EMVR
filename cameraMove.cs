@@ -17,7 +17,7 @@ public class cameraMove : MonoBehaviour
     public Vector3 xx3;
     public Vector3 X3;
     public Vector4 X4;
-    public Matrix4x4 L;
+    public Matrix4x4 Lplayer;
     public Matrix4x4 Linv;
     private float qom;
     public GameObject targetObject;
@@ -45,7 +45,7 @@ public class cameraMove : MonoBehaviour
         u3 = new Vector3(0.0f, 0.0f, 0.0f);
         u4 = new Vector4(u3.x, u3.y, u3.z, 1f);
         u3hat = u3.normalized;
-        L = Matrix4x4.identity;
+        Lplayer = Matrix4x4.identity;
         met = Matrix4x4.identity;
         met.m33 = -1;
         qom = 0.01f;
@@ -94,29 +94,9 @@ public class cameraMove : MonoBehaviour
         }
 
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
-        /*L.m00 = 1f + (u4.w - 1f) * u3hat.x * u3hat.x;
-        L.m11 = 1f + (u4.w - 1f) * u3hat.y * u3hat.y;
-        L.m22 = 1f + (u4.w - 1f) * u3hat.z * u3hat.z;
+        Lplayer = LTrans(u3);
 
-        L.m01 = (u4.w - 1f) * u3hat.x * u3hat.y;
-        L.m02 = (u4.w - 1f) * u3hat.x * u3hat.z;
-        L.m10 = (u4.w - 1f) * u3hat.y * u3hat.x;
-        L.m12 = (u4.w - 1f) * u3hat.y * u3hat.z;
-        L.m20 = (u4.w - 1f) * u3hat.z * u3hat.x;
-        L.m21 = (u4.w - 1f) * u3hat.z * u3hat.y;
-
-        L.m03 = (-1) * u4.x;
-        L.m13 = (-1) * u4.y;
-        L.m23 = (-1) * u4.z;
-        L.m30 = (-1) * u4.x;
-        L.m31 = (-1) * u4.y;
-        L.m32 = (-1) * u4.z;
-
-        L.m33 = u4.w;*/
-
-        L = LTrans(u3);
-
-        Linv = L.inverse;
+        Linv = Lplayer.inverse;
 
         //LForce is a vector in world coordinate space
         LForce = qom * (met * ad.f * u4);
@@ -137,7 +117,7 @@ public class cameraMove : MonoBehaviour
 
         xx4 += u4 * Time.deltaTime;
         xx3 = xx4;
-        X4 = L * xx4;
+        X4 = Lplayer * xx4;
         X3 = new Vector3(X4.x, X4.y, X4.z);
         transform.position = X3;
 
@@ -145,7 +125,7 @@ public class cameraMove : MonoBehaviour
         ppoL.Add(xx4);
 
         //debugging functions
-        Debug.Log($"L={L}");
+        Debug.Log($"L={Lplayer}");
         Debug.Log($"AD.Q={aq}");
         Debug.Log($"addf={ad.f}");
         Debug.Log($"addq={ad.q}");
