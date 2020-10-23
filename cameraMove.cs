@@ -8,8 +8,8 @@ public class cameraMove : MonoBehaviour
 
     Vector3 ACCEL3;
     Vector4 ACCEL4;
-    Vector3 accela3;
-    Vector4 accela4;
+    Vector3 playraccelworldframe3;
+    Vector4 playraccelworldframe4;
     public Vector3 playrvelworldframe3;//u3
     public Vector4 playrvelworldframe4;//u4
     Vector3 u3hat;
@@ -28,12 +28,6 @@ public class cameraMove : MonoBehaviour
     private Matrix4x4 r;
     public Vector4 LForce;
     public List<Vector4> ppoL = new List<Vector4>();
-    private Vector4 dx4;
-    public Vector4 upt;
-    private float a;
-    private float b;
-    private float c;
-    private float sgm;
     public Vector4 xint;//intersection of worldline with PLC
 
     // Use this for initialization
@@ -102,10 +96,10 @@ public class cameraMove : MonoBehaviour
         LForce = qom * (met * ad.f * playrvelworldframe4);
 
         ACCEL4 = new Vector4(ACCEL3.x, ACCEL3.y, ACCEL3.z, 0);
-        accela4 = Lplayerinverse * ACCEL4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
-        accela3 = new Vector3(accela4.x, accela4.y, accela4.z);
+        playraccelworldframe4 = Lplayerinverse * ACCEL4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
+        playraccelworldframe3 = new Vector3(playraccelworldframe4.x, playraccelworldframe4.y, playraccelworldframe4.z);
 
-        playrvelworldframe3 += accela3 * Time.deltaTime;
+        playrvelworldframe3 += playraccelworldframe3 * Time.deltaTime;
         //u3 *= 0.98f;
         playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, Mathf.Sqrt(1f + playrvelworldframe3.sqrMagnitude));
         u3hat = playrvelworldframe3.normalized;
@@ -132,7 +126,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"LForce={LForce}");
         Debug.Log($"Linv={Lplayerinverse}");
         Debug.Log($"ACCEL4={ACCEL4}");
-        Debug.Log($"accel4={accela4}");
+        Debug.Log($"accel4={playraccelworldframe4}");
         Debug.Log($"u4={playrvelworldframe4}");
         Debug.Log($"x4 ={xx4}");
         Debug.Log($"u4={playrvelworldframe4}");
