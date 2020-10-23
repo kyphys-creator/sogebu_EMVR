@@ -18,7 +18,7 @@ public class cameraMove : MonoBehaviour
     public Vector3 X3;
     public Vector4 X4;
     public Matrix4x4 Lplayer;
-    public Matrix4x4 Linv;
+    public Matrix4x4 Lplayerinverse;
     private float qom;
     public GameObject targetObject;
     public Matrix4x4 met;
@@ -96,13 +96,13 @@ public class cameraMove : MonoBehaviour
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
         Lplayer = LTrans(u3);
 
-        Linv = Lplayer.inverse;
+        Lplayerinverse = Lplayer.inverse;
 
         //LForce is a vector in world coordinate space
         LForce = qom * (met * ad.f * u4);
 
         ACCEL4 = new Vector4(ACCEL3.x, ACCEL3.y, ACCEL3.z, 0);
-        accela4 = Linv * ACCEL4 + LForce - u4.normalized * 0.01f;// 0.15f
+        accela4 = Lplayerinverse * ACCEL4 + LForce - u4.normalized * 0.01f;// 0.15f
         accela3 = new Vector3(accela4.x, accela4.y, accela4.z);
 
         u3 += accela3 * Time.deltaTime;
@@ -130,7 +130,7 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"addf={ad.f}");
         Debug.Log($"addq={ad.q}");
         Debug.Log($"LForce={LForce}");
-        Debug.Log($"Linv={Linv}");
+        Debug.Log($"Linv={Lplayerinverse}");
         Debug.Log($"ACCEL4={ACCEL4}");
         Debug.Log($"accel4={accela4}");
         Debug.Log($"u4={u4}");

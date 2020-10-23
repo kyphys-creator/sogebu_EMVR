@@ -104,7 +104,7 @@ public class ArrowDirection : MonoBehaviour
         f = K(efp, bfp);*/
 
         //referencing lorentzian matrix
-        l = cM.Linv;
+        l = cM.Lplayerinverse;
 
         //Q = F;
         //q = f;

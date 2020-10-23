@@ -16,7 +16,7 @@ public class Skybox : MonoBehaviour
     {
         cam = Camera.main;
         c = cam.GetComponent<cameraMove>();
-        Linv = c.Linv;
+        Linv = c.Lplayerinverse;
         /*Output of this Lorentz matrix is on debug console*/
         Debug.Log($"lmat = {Linv}");
         RenderSettings.skybox = sky[num];
@@ -25,7 +25,7 @@ public class Skybox : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Linv = c.Linv;
+        Linv = c.Lplayerinverse;
         Shader.SetGlobalMatrix("L", Linv);
         Debug.Log($"lmat = {Linv}");
     }

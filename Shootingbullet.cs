@@ -47,7 +47,7 @@ public class Shootingbullet : MonoBehaviour
         R.m21 = 2 * (q.y * q.z + q.x * q.w);
         R.m22 = -q.x * q.x - q.y * q.y + q.z * q.z + q.w * q.w;
 
-        Ll = cM.Linv;
+        Ll = cM.Lplayerinverse;
         U3hat = v.normalized;
         U4 = new Vector4(U3hat.x, U3hat.y, U3hat.z, Mathf.Sqrt(1f + U3hat.sqrMagnitude));
         //duplication of bullets

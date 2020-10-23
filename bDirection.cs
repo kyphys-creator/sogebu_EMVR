@@ -94,7 +94,7 @@ public class bDirection : MonoBehaviour
         F = K(ef, bf);*/
 
         //referencing lorentzian matrix
-        l = cM.Linv;
+        l = cM.Lplayerinverse;
 
         //Q = F;
 
