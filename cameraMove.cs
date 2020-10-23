@@ -94,7 +94,7 @@ public class cameraMove : MonoBehaviour
         }
 
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
-        L.m00 = 1f + (u4.w - 1f) * u3hat.x * u3hat.x;
+        /*L.m00 = 1f + (u4.w - 1f) * u3hat.x * u3hat.x;
         L.m11 = 1f + (u4.w - 1f) * u3hat.y * u3hat.y;
         L.m22 = 1f + (u4.w - 1f) * u3hat.z * u3hat.z;
 
@@ -112,7 +112,9 @@ public class cameraMove : MonoBehaviour
         L.m31 = (-1) * u4.y;
         L.m32 = (-1) * u4.z;
 
-        L.m33 = u4.w;
+        L.m33 = u4.w;*/
+
+        L = LTrans(u3);
 
         Linv = L.inverse;
 
@@ -178,4 +180,32 @@ public class cameraMove : MonoBehaviour
     {
         return v.x * v.x + v.y * v.y + v.z * v.z - v.w * v.w;
     }
+
+    public Matrix4x4 LTrans(Vector3 u3)
+    {
+        Vector3 u3hat = u3.normalized;
+        Vector4 u4 = new Vector4(u3.x, u3.y, u3.z, Mathf.Sqrt(1f + u3.sqrMagnitude));
+        Matrix4x4 L = Matrix4x4.identity;
+        //Lply has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
+        L.m00 = 1f + (u4.w - 1f) * u3hat.x * u3hat.x;
+        L.m11 = 1f + (u4.w - 1f) * u3hat.y * u3hat.y;
+        L.m22 = 1f + (u4.w - 1f) * u3hat.z * u3hat.z;
+
+        L.m01 = (u4.w - 1f) * u3hat.x * u3hat.y;
+        L.m02 = (u4.w - 1f) * u3hat.x * u3hat.z;
+        L.m10 = (u4.w - 1f) * u3hat.y * u3hat.x;
+        L.m12 = (u4.w - 1f) * u3hat.y * u3hat.z;
+        L.m20 = (u4.w - 1f) * u3hat.z * u3hat.x;
+        L.m21 = (u4.w - 1f) * u3hat.z * u3hat.y;
+        L.m03 = (-1) * u4.x;
+        L.m13 = (-1) * u4.y;
+        L.m23 = (-1) * u4.z;
+        L.m30 = (-1) * u4.x;
+        L.m31 = (-1) * u4.y;
+        L.m32 = (-1) * u4.z;
+
+        L.m33 = u4.w;
+        return L;
+    }
+
 }
