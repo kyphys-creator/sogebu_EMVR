@@ -21,7 +21,7 @@ public class cameraMove : MonoBehaviour
     public Matrix4x4 Lplayerinverse;
     private float qom;
     public GameObject targetObject;
-    public Matrix4x4 met;
+    public Matrix4x4 metrictensor;
     private Matrix4x4 aq;
     ArrowDirection ad;
     public Matrix4x4 R;
@@ -40,8 +40,8 @@ public class cameraMove : MonoBehaviour
         playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, 1f);
         u3hat = playrvelworldframe3.normalized;
         Lplayer = Matrix4x4.identity;
-        met = Matrix4x4.identity;
-        met.m33 = -1;
+        metrictensor = Matrix4x4.identity;
+        metrictensor.m33 = -1;
         qom = 0.01f;
         aq = ad.q;
         Debug.Log($"Q0={ad.q}");
@@ -93,7 +93,7 @@ public class cameraMove : MonoBehaviour
         Lplayerinverse = Lplayer.inverse;
 
         //LForce is a vector in world coordinate space
-        LorentzForceworldframe = qom * (met * ad.f * playrvelworldframe4);
+        LorentzForceworldframe = qom * (metrictensor * ad.f * playrvelworldframe4);
 
         playraccelplayrrestframe4 = new Vector4(playraccelplayrrestframe3.x, playraccelplayrrestframe3.y, playraccelplayrrestframe3.z, 0);
         playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LorentzForceworldframe - playrvelworldframe4.normalized * 0.01f;// 0.15f
