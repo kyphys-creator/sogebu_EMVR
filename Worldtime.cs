@@ -27,7 +27,7 @@ public class Worldtime : MonoBehaviour
     void Update()
     {
         t += Time.deltaTime;
-        vw3 = cM.u4;
+        vw3 = cM.playrvelworldframe4;
         m3 = vw3.w * t;
         worldtime.text = "Worldtime:  " + m3.ToString() + "s";
     }

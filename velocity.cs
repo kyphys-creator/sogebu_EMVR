@@ -26,7 +26,7 @@ public class velocity : MonoBehaviour
     void Update()
     {
         float startTime = Time.realtimeSinceStartup;
-        k3 = cM.playrvelworldframe;
+        k3 = cM.playrvelworldframe3;
         m3 = k3.magnitude;
         veltext.text = "Velocity: " + m3.ToString() + "% of the speed of light.";
     }

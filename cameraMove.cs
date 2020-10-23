@@ -10,8 +10,8 @@ public class cameraMove : MonoBehaviour
     Vector4 ACCEL4;
     Vector3 accela3;
     Vector4 accela4;
-    public Vector3 playrvelworldframe;//u3
-    public Vector4 u4;//u4
+    public Vector3 playrvelworldframe3;//u3
+    public Vector4 playrvelworldframe4;//u4
     Vector3 u3hat;
     public Vector4 xx4;//xx4
     public Vector3 xx3;
@@ -42,9 +42,9 @@ public class cameraMove : MonoBehaviour
         ad = targetObject.GetComponent<ArrowDirection>();
         R = Matrix4x4.identity;
         xx4 = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0f);
-        playrvelworldframe = new Vector3(0.0f, 0.0f, 0.0f);
-        u4 = new Vector4(playrvelworldframe.x, playrvelworldframe.y, playrvelworldframe.z, 1f);
-        u3hat = playrvelworldframe.normalized;
+        playrvelworldframe3 = new Vector3(0.0f, 0.0f, 0.0f);
+        playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, 1f);
+        u3hat = playrvelworldframe3.normalized;
         Lplayer = Matrix4x4.identity;
         met = Matrix4x4.identity;
         met.m33 = -1;
@@ -94,28 +94,28 @@ public class cameraMove : MonoBehaviour
         }
 
         //L has upper and lower indices: (0,1,2,3) is (x,y,z,w), where w is t.
-        Lplayer = LTrans(playrvelworldframe);
+        Lplayer = LTrans(playrvelworldframe3);
 
         Lplayerinverse = Lplayer.inverse;
 
         //LForce is a vector in world coordinate space
-        LForce = qom * (met * ad.f * u4);
+        LForce = qom * (met * ad.f * playrvelworldframe4);
 
         ACCEL4 = new Vector4(ACCEL3.x, ACCEL3.y, ACCEL3.z, 0);
-        accela4 = Lplayerinverse * ACCEL4 + LForce - u4.normalized * 0.01f;// 0.15f
+        accela4 = Lplayerinverse * ACCEL4 + LForce - playrvelworldframe4.normalized * 0.01f;// 0.15f
         accela3 = new Vector3(accela4.x, accela4.y, accela4.z);
 
-        playrvelworldframe += accela3 * Time.deltaTime;
+        playrvelworldframe3 += accela3 * Time.deltaTime;
         //u3 *= 0.98f;
-        u4 = new Vector4(playrvelworldframe.x, playrvelworldframe.y, playrvelworldframe.z, Mathf.Sqrt(1f + playrvelworldframe.sqrMagnitude));
-        u3hat = playrvelworldframe.normalized;
+        playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, Mathf.Sqrt(1f + playrvelworldframe3.sqrMagnitude));
+        u3hat = playrvelworldframe3.normalized;
 
-        r.m00 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
-        r.m11 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
-        r.m22 = Mathf.Sqrt(1f - playrvelworldframe.sqrMagnitude);
+        r.m00 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
+        r.m11 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
+        r.m22 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
         Shader.SetGlobalMatrix("R", r);
 
-        xx4 += u4 * Time.deltaTime;
+        xx4 += playrvelworldframe4 * Time.deltaTime;
         xx3 = xx4;
         X4 = Lplayer * xx4;
         X3 = new Vector3(X4.x, X4.y, X4.z);
@@ -133,9 +133,9 @@ public class cameraMove : MonoBehaviour
         Debug.Log($"Linv={Lplayerinverse}");
         Debug.Log($"ACCEL4={ACCEL4}");
         Debug.Log($"accel4={accela4}");
-        Debug.Log($"u4={u4}");
+        Debug.Log($"u4={playrvelworldframe4}");
         Debug.Log($"x4 ={xx4}");
-        Debug.Log($"u4={u4}");
+        Debug.Log($"u4={playrvelworldframe4}");
     }
     public Vector3 vp(Vector3 v1, Vector3 v2) //calculate vectorproduct
     {
