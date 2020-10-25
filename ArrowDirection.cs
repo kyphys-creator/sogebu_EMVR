@@ -45,8 +45,8 @@ public class ArrowDirection : MonoBehaviour
         Rzero = tmp;
         rzero = tmp2;
         //Electric charge of the point source.
-        q1 = 0.0f;
-        q2 = 0.0f;
+        q1 = 3.0f;
+        q2 = -3.0f;
 
         r = rR(transform.position, rzero);
         R = rR(transform.position, Rzero);
