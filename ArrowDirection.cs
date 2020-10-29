@@ -45,8 +45,8 @@ public class ArrowDirection : MonoBehaviour
         Rzero = tmp;
         rzero = tmp2;
         //Electric charge of the point source.
-        q1 = 3.0f;
-        q2 = -3.0f;
+        q1 = 0.0f;
+        q2 = 0.0f;
 
         r = rR(transform.position, rzero);
         R = rR(transform.position, Rzero);
@@ -84,7 +84,7 @@ public class ArrowDirection : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         /*t += Time.deltaTime;
         q1 = Mathf.Cos(cM.u4.w * t);

@@ -8,8 +8,10 @@ public class cameraMove : MonoBehaviour
 
     Vector3 playraccelplayrrestframe3;//ACCEL3
     Vector4 playraccelplayrrestframe4;//ACCEL4
+
     Vector3 playraccelworldframe3;//accela3
     Vector4 playraccelworldframe4;//accela4
+
     public Vector3 playrvelworldframe3;//u3
     public Vector4 playrvelworldframe4;//u4
     Vector3 u3hat;

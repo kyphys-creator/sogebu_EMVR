@@ -39,7 +39,7 @@ public class cubeMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         /*int i = j;
 
