@@ -17,34 +17,34 @@ public class Vertex : MonoBehaviour
 
     Camera cam;
     public GameObject centralObject;
-    Vector3 centralobjectpos3;
-    Vector4 centralobjectpos4;
+    Vector3 centralobjectposworldframe3;
+    Vector4 centralobjectposworldframe4;
     Vector3 centralobjectvelworld3;
     Vector4 centralobjectvelworld4;
     cameraMove cM;
     cubeMove cuM;
-    private Matrix4x4 l;
-    private Vector4 k;//player's rest frame
-    private Vector4 o4;//player's rest frame vector4
-    private Vector4 v4;//world frame vector4
-    private Vector3 x3;//object's world frame position
+    private Matrix4x4 Lplayer;
+    private Matrix4x4 Lplayerinverse;
+    private Vector4 vertexposplayrrestframe4;//vertexposplayrrestframe4
+    private Vector3 objectposworldframe4;//object's world frame position
 
     public void Awake()
     {
         cam = Camera.main;
         cM = cam.GetComponent<cameraMove>();
-        cuM = this.GetComponent<cubeMove>();
-        centralobjectpos3 = centralObject.transform.position;
-        centralobjectpos4 = new Vector4(centralobjectpos3.x, centralobjectpos3.y, centralobjectpos3.z, -centralobjectpos3.magnitude);
-        l = cM.Lplayer;
-        Matrix4x4 linv = cM.Lplayerinverse;
+        cuM = centralObject.GetComponent<cubeMove>();
+        //importing the position of central object in world frame from cubeMove's four vector x4
+        centralobjectposworldframe4 = cuM.x4;
+        centralobjectposworldframe3 = centralobjectposworldframe4;
+        Lplayer = cM.Lplayer;
+        Lplayerinverse = cM.Lplayerinverse;
         this.meshFilter = this.GetComponent<MeshFilter>();
         this.originalvertices = this.meshFilter.mesh.vertices;
         this.vertices = this.meshFilter.mesh.vertices;
 
         //o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
         //x3 = cuM.x4;
-        x3 = linv * centralobjectpos4;//body's position in world frame
+        objectposworldframe4 = Lplayerinverse * centralobjectposworldframe4;//body's position in world frame
 
         centralobjectvelworld3 = new Vector3(0.0f, 0.0f, 0.0f);
         centralobjectvelworld4 = centralobjectvelworld3;
@@ -53,13 +53,13 @@ public class Vertex : MonoBehaviour
 
     public void LateUpdate()
     {
-        centralobjectpos3 = centralObject.transform.position;
-        centralobjectpos4 = new Vector4(centralobjectpos3.x, centralobjectpos3.y, centralobjectpos3.z, -centralobjectpos3.magnitude);
+        centralobjectposworldframe4 = cuM.x4;
+        centralobjectposworldframe3 = centralobjectposworldframe4;
         //Object's center point in player's rest frame
         //o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
-        l = cM.Lplayer;//world frame to player's rest frame
-        Matrix4x4 linv = cM.Lplayerinverse;
-        x3 = linv * centralobjectpos4;
+        Lplayer = cM.Lplayer;//world frame to player's rest frame
+        Lplayerinverse = cM.Lplayerinverse;
+        objectposworldframe4 = Lplayerinverse * centralobjectposworldframe4;
         //cM.xx4 is the player's position in player's rest frame
 
         this.targetVertices = new List<Vector3>();
@@ -67,7 +67,7 @@ public class Vertex : MonoBehaviour
         {
             Vector3 vertex = originalvertices[i];
             //vertObject.TransformPoint(vertex);
-            Vector3 vv = x3 + vertex;
+            Vector3 vv = objectposworldframe4 + vertex;
             //vv4 in world frame
             Vector4 vv4 = vv;
             vv4.w = cM.playrposworldframe4.w - (cM.playrposworldframe3 - vv).magnitude;
@@ -75,8 +75,8 @@ public class Vertex : MonoBehaviour
             /*if (!this.originalVertices.Contains(vertex))
             {*/
             //
-            k = l * vv4;
-            this.targetVertices.Add(new Vector3(k.x, k.y, k.z));
+            vertexposplayrrestframe4 = Lplayer * vv4;
+            this.targetVertices.Add(new Vector3(vertexposplayrrestframe4.x, vertexposplayrrestframe4.y, vertexposplayrrestframe4.z));
         }
 
         // 現在位置の更新
