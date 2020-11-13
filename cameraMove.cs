@@ -44,7 +44,7 @@ public class cameraMove : MonoBehaviour
         Lplayer = Matrix4x4.identity;
         metrictensor = Matrix4x4.identity;
         metrictensor.m33 = -1;
-        qom = 10.0f;
+        qom = 0f;
         aq = ad.q;
         Debug.Log($"Q0={ad.q}");
         ppoL.Add(playrposworldframe4);
