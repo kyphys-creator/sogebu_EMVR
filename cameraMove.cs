@@ -98,7 +98,7 @@ public class cameraMove : MonoBehaviour
         LorentzForceworldframe = qom * (metrictensor * ad.f * playrvelworldframe4);
 
         playraccelplayrrestframe4 = new Vector4(playraccelplayrrestframe3.x, playraccelplayrrestframe3.y, playraccelplayrrestframe3.z, 0);
-        playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LorentzForceworldframe - playrvelworldframe4.normalized * 0.01f;// 0.15f
+        playraccelworldframe4 = Lplayerinverse * playraccelplayrrestframe4 + LorentzForceworldframe - playrvelworldframe4.normalized * 0.1f;// 0.15f
         playraccelworldframe3 = new Vector3(playraccelworldframe4.x, playraccelworldframe4.y, playraccelworldframe4.z);
 
         playrvelworldframe3 += playraccelworldframe3 * Time.deltaTime;

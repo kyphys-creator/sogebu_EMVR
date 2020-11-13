@@ -31,8 +31,7 @@ public class cubeMove : MonoBehaviour
         cM = cam.GetComponent<cameraMove>();
         xCam4 = cM.playrposworldframe4;
 
-        x4 = new Vector4(transform.position.x, transform.position.y, transform.position.z, 0f);
-        n4 = new Vector4(0f, 0f, 0f, 1f);
+        x4 = cM.Lplayerinverse * new Vector4(transform.position.x, transform.position.y, transform.position.z, -(cam.transform.position - transform.position).magnitude);
         xx4 = x4;
         //make a list of position vector
         j = 0;
@@ -64,10 +63,10 @@ public class cubeMove : MonoBehaviour
         Debug.Log($"xint={xint}");
         x4 = xint;
         j = i + 1;*/
-        //x4 = transform.position;//x4 + t * n4;
+        x4 = cM.Lplayerinverse * new Vector4(transform.position.x, transform.position.y, transform.position.z, -(cam.transform.position - transform.position).magnitude);
         xCam4 = cM.playrposworldframe4;
         t = lip(n4, x4 - xCam4) - Mathf.Sqrt(Mathf.Pow(lip(n4, x4 - xCam4), 2) + lSqN(x4 - xCam4));
-        x4 = x4 + n4 * Time.deltaTime;
+        x4.w += cM.playrvelworldframe4.w * Time.deltaTime;
         transform.position = cM.Lplayer * x4;
         xnorm = xCam4.normalized;
     }

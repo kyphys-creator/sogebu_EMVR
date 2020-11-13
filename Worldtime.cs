@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Worldtime : MonoBehaviour
 {
     cameraMove cM;
-    public Vector4 vw3;
+    public Vector4 playrvelworldframe4;
     Camera cam;
     public float t;
     //********** 開始 **********//
@@ -21,14 +21,15 @@ public class Worldtime : MonoBehaviour
         cM = cam.GetComponent<cameraMove>();
         worldtime.text = "Worldtime:  0s"; //初期スコアを代入して画面に表示
         t = 0;
+        m3 = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         t += Time.deltaTime;
-        vw3 = cM.playrvelworldframe4;
-        m3 = vw3.w * t;
+        playrvelworldframe4 = cM.playrvelworldframe4;
+        m3 += playrvelworldframe4.w * Time.deltaTime;
         worldtime.text = "Worldtime:  " + m3.ToString() + "s";
     }
 }

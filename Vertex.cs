@@ -23,6 +23,7 @@ public class Vertex : MonoBehaviour
     Vector4 centralobjectvelworld4;
     cameraMove cM;
     cubeMove cuM;
+    public Matrix4x4 R;
     private Matrix4x4 Lplayer;
     private Matrix4x4 Lplayerinverse;
     private Vector4 vertexposplayrrestframe4;//vertexposplayrrestframe4
@@ -30,21 +31,37 @@ public class Vertex : MonoBehaviour
 
     public void Awake()
     {
+        Quaternion q = centralObject.transform.rotation.normalized;
+        //Defining Rotation Matrix by using Quartanion
+        R = Matrix4x4.identity;
+        R.m00 = q.x * q.x - q.y * q.y - q.z * q.z + q.w * q.w;
+        R.m01 = 2 * (q.x * q.y - q.z * q.w);
+        R.m02 = 2 * (q.x * q.z + q.y * q.w);
+        R.m10 = 2 * (q.x * q.z + q.y * q.w);
+        R.m11 = -q.x * q.x + q.y * q.y - q.z * q.z + q.w * q.w;
+        R.m12 = 2 * (q.y * q.z - q.x * q.w);
+        R.m20 = 2 * (q.x * q.z - q.y * q.w);
+        R.m21 = 2 * (q.y * q.z + q.x * q.w);
+        R.m22 = -q.x * q.x - q.y * q.y + q.z * q.z + q.w * q.w;
+
         cam = Camera.main;
         cM = cam.GetComponent<cameraMove>();
         cuM = centralObject.GetComponent<cubeMove>();
+
         //importing the position of central object in world frame from cubeMove's four vector x4
         centralobjectposworldframe4 = cuM.x4;
         centralobjectposworldframe3 = centralobjectposworldframe4;
+
+        //importing Lorentz transformation(Lplayer) and its inverse transformation from cameraMove
         Lplayer = cM.Lplayer;
         Lplayerinverse = cM.Lplayerinverse;
+
+        //importing basic meshdata(vertex list)
         this.meshFilter = this.GetComponent<MeshFilter>();
         this.originalvertices = this.meshFilter.mesh.vertices;
         this.vertices = this.meshFilter.mesh.vertices;
 
-        //o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
-        //x3 = cuM.x4;
-        objectposworldframe4 = Lplayerinverse * centralobjectposworldframe4;//body's position in world frame
+        //objectposworldframe4 = Lplayerinverse * centralobjectposworldframe4;//body's position in world frame
 
         centralobjectvelworld3 = new Vector3(0.0f, 0.0f, 0.0f);
         centralobjectvelworld4 = centralobjectvelworld3;
@@ -59,7 +76,7 @@ public class Vertex : MonoBehaviour
         //o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
         Lplayer = cM.Lplayer;//world frame to player's rest frame
         Lplayerinverse = cM.Lplayerinverse;
-        objectposworldframe4 = Lplayerinverse * centralobjectposworldframe4;
+        //objectposworldframe4 = centralobjectposworldframe4;
         //cM.xx4 is the player's position in player's rest frame
 
         this.targetVertices = new List<Vector3>();
@@ -67,7 +84,7 @@ public class Vertex : MonoBehaviour
         {
             Vector3 vertex = originalvertices[i];
             //vertObject.TransformPoint(vertex);
-            Vector3 vv = objectposworldframe4 + vertex;
+            Vector3 vv = centralobjectposworldframe3 + vertex;
             //vv4 in world frame
             Vector4 vv4 = vv;
             vv4.w = cM.playrposworldframe4.w - (cM.playrposworldframe3 - vv).magnitude;
@@ -75,7 +92,7 @@ public class Vertex : MonoBehaviour
             /*if (!this.originalVertices.Contains(vertex))
             {*/
             //
-            vertexposplayrrestframe4 = Lplayer * vv4;
+            vertexposplayrrestframe4 = Lplayer * vv4 - cM.Lplayer * cuM.x4;
             this.targetVertices.Add(new Vector3(vertexposplayrrestframe4.x, vertexposplayrrestframe4.y, vertexposplayrrestframe4.z));
         }
 
