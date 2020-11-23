@@ -27,7 +27,6 @@ public class cameraMove : MonoBehaviour
     private Matrix4x4 aq;
     ArrowDirection ad;
     public Matrix4x4 R;
-    private Matrix4x4 r;
     public Vector4 LorentzForceworldframe;
     public List<Vector4> ppoL = new List<Vector4>();
     public Vector4 xint;//intersection of worldline with PLC
@@ -44,11 +43,10 @@ public class cameraMove : MonoBehaviour
         Lplayer = Matrix4x4.identity;
         metrictensor = Matrix4x4.identity;
         metrictensor.m33 = -1;
-        qom = 0f;
+        qom = -0.01f;
         aq = ad.q;
         Debug.Log($"Q0={ad.q}");
         ppoL.Add(playrposworldframe4);
-        r = Matrix4x4.identity;
     }
 
     // Update is called once per frame
@@ -105,11 +103,6 @@ public class cameraMove : MonoBehaviour
         //u3 *= 0.98f;
         playrvelworldframe4 = new Vector4(playrvelworldframe3.x, playrvelworldframe3.y, playrvelworldframe3.z, Mathf.Sqrt(1f + playrvelworldframe3.sqrMagnitude));
         u3hat = playrvelworldframe3.normalized;
-
-        r.m00 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
-        r.m11 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
-        r.m22 = Mathf.Sqrt(1f - playrvelworldframe3.sqrMagnitude);
-        Shader.SetGlobalMatrix("R", r);
 
         playrposworldframe4 += playrvelworldframe4 * Time.deltaTime;
         playrposworldframe3 = playrposworldframe4;
