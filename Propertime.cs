@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Propertime : MonoBehaviour
 {
-    cameraMove cM;
+    cameraMove2 cM;
     public Vector4 vw3;
     Camera cam;
     public double t;
@@ -18,7 +18,7 @@ public class Propertime : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
+        cM = cam.GetComponent<cameraMove2>();
         propertime.text = "Worldtime:  0s"; //初期スコアを代入して画面に表示
         t = 0;
     }

@@ -30,7 +30,7 @@ public class bDirection : MonoBehaviour
     private Vector3 Rp;
     private float t;
     Camera cam;
-    cameraMove cM;
+    cameraMove2 cM;
     public GameObject tgObject;
     private Matrix4x4 aq;
     ArrowDirection ad;
@@ -41,7 +41,7 @@ public class bDirection : MonoBehaviour
         Vector3 tmp = GameObject.Find("Point_charge").transform.position;
         Vector3 tmp2 = GameObject.Find("Point_charge2").transform.position;
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
+        cM = cam.GetComponent<cameraMove2>();
         //Defining a point charge at Rzero.
         Rzero = tmp;
         rzero = tmp2;
@@ -94,7 +94,7 @@ public class bDirection : MonoBehaviour
         F = K(ef, bf);*/
 
         //referencing lorentzian matrix
-        l = cM.Lplayerinverse;
+        l = cM.Lplayer.inverse;
 
         //Q = F;
 

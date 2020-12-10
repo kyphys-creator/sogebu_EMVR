@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class velocity : MonoBehaviour
 {
-    cameraMove cM;
+    cameraMove2 cM;
     public Vector3 k3;
     Camera cam;
 
@@ -18,7 +18,7 @@ public class velocity : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
+        cM = cam.GetComponent<cameraMove2>();
         veltext.text = "Velocity: 0% of the speed of light."; //初期スコアを代入して画面に表示
     }
 
@@ -26,8 +26,7 @@ public class velocity : MonoBehaviour
     void Update()
     {
         float startTime = Time.realtimeSinceStartup;
-        k3 = cM.playrvelworldframe3;
-        m3 = k3.magnitude;
+        m3 = 100.0f * (1.0f - 1.0 / Mathf.Sqrt( 1 + Mathf.Pow(cM.playrvelworldframe3.magnitude, 2.0f)));
         veltext.text = "Velocity: " + m3.ToString() + "% of the speed of light.";
     }
 }

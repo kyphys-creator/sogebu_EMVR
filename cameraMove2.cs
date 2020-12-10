@@ -8,7 +8,7 @@ public class cameraMove2 : MonoBehaviour
     public Vector3 playrposworldframe3;
     public Vector3 playrvelworldframe3;
     public Vector4 playrvelworldframe4;
-    private Vector3 playraccelworldframe3;
+    public Vector3 playraccelworldframe3;
     private Vector4 playraccelworldframe4;
     public Vector4 LorentzForceworldframe;
 
@@ -19,15 +19,15 @@ public class cameraMove2 : MonoBehaviour
 
     private float qoverm;
     private float unitAccel;
-    ArrowDirection ArrowDirection;
+    ArrowDirection2 ArrowDirection2;
 
-    GameObject emfields;
+    public GameObject emfields;
 
     // Start is called before the first frame update
     void Start()
     {
         //importing ArrowDirection for Electromagnetic Effects
-        ArrowDirection = emfields.GetComponent<ArrowDirection>();
+        ArrowDirection2 = emfields.GetComponent<ArrowDirection2>();
 
         //defining rotation matrix
         R = Matrix4x4.identity;
@@ -43,20 +43,20 @@ public class cameraMove2 : MonoBehaviour
         playrvelworldframe4.w = 1.0f;
 
         //defining the initial Lorentz transformation
-        Lplayer = LTrans(playrvelworldframe3);
+        Lplayer = Matrix4x4.identity;
 
         //defining metric tensor
         metrictensor = Matrix4x4.identity;
         metrictensor.m33 = -1;
 
         //defining effective chargeovermass of player
-        qoverm = 0.0f;
+        qoverm = -0.05f;
 
         //defining unit acceleration
         unitAccel = 0.1f;
 
         //defining Electromagnetic tensor at player's position
-        Ftensor = ArrowDirection.f;
+        Ftensor = ArrowDirection2.G;
         //defining Lorentz Force in world frame
         LorentzForceworldframe = qoverm * (metrictensor * Ftensor * playrvelworldframe4);
 
@@ -64,10 +64,10 @@ public class cameraMove2 : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //defining Electromagnetic tensor at player's position
-        Ftensor = ArrowDirection.f;
+        Ftensor = ArrowDirection2.G;
 
         //Defining Rotation Matrix by using Quartanion
         Quaternion q = transform.rotation.normalized;
@@ -86,19 +86,19 @@ public class cameraMove2 : MonoBehaviour
         //player can input arbitrary acceleration for every update
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            playraccelworldframe4 = R * Vector3.up * unitAccel;
+            playraccelworldframe4 = Lplayer.inverse * R * Vector3.up * unitAccel;
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            playraccelworldframe4 = R * Vector3.down * unitAccel;
+            playraccelworldframe4 = Lplayer.inverse * R * Vector3.down * unitAccel;
         }
         else if (Input.GetKey(KeyCode.UpArrow))
         {
-            playraccelworldframe4 = R * Vector3.forward * unitAccel;
+            playraccelworldframe4 = Lplayer.inverse * R * Vector3.forward * unitAccel;
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            playraccelworldframe4 = R * Vector3.back * unitAccel;
+            playraccelworldframe4 = Lplayer.inverse * R * Vector3.back * unitAccel;
         }
         else
         {
@@ -109,7 +109,7 @@ public class cameraMove2 : MonoBehaviour
         LorentzForceworldframe = qoverm * (metrictensor * Ftensor * playrvelworldframe4);
 
         //
-        playraccelworldframe4 += LorentzForceworldframe - playrvelworldframe4.normalized * 0.1f;// 0.15f
+        playraccelworldframe4 += LorentzForceworldframe - playrvelworldframe4.normalized * 0.0f;// 0.15f
         playraccelworldframe3 = playraccelworldframe4;
 
         //

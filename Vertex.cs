@@ -21,8 +21,8 @@ public class Vertex : MonoBehaviour
     Vector4 centralobjectposworldframe4;
     Vector3 centralobjectvelworld3;
     Vector4 centralobjectvelworld4;
-    cameraMove cM;
-    cubeMove cuM;
+    cameraMove2 cameraMove2;
+    cubeMove2 cubeMove2;
     public Matrix4x4 R;
     private Matrix4x4 Lplayer;
     private Matrix4x4 Lplayerinverse;
@@ -45,16 +45,16 @@ public class Vertex : MonoBehaviour
         R.m22 = -q.x * q.x - q.y * q.y + q.z * q.z + q.w * q.w;
 
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
-        cuM = centralObject.GetComponent<cubeMove>();
+        cameraMove2 = cam.GetComponent<cameraMove2>();
+        cubeMove2 = centralObject.GetComponent<cubeMove2>();
 
         //importing the position of central object in world frame from cubeMove's four vector x4
-        centralobjectposworldframe4 = cuM.x4;
+        centralobjectposworldframe4 = cubeMove2.objposworldframe4;
         centralobjectposworldframe3 = centralobjectposworldframe4;
 
         //importing Lorentz transformation(Lplayer) and its inverse transformation from cameraMove
-        Lplayer = cM.Lplayer;
-        Lplayerinverse = cM.Lplayerinverse;
+        Lplayer = cameraMove2.Lplayer;
+        Lplayerinverse = cameraMove2.Lplayer.inverse;
 
         //importing basic meshdata(vertex list)
         this.meshFilter = this.GetComponent<MeshFilter>();
@@ -70,12 +70,12 @@ public class Vertex : MonoBehaviour
 
     public void LateUpdate()
     {
-        centralobjectposworldframe4 = cuM.x4;
+        centralobjectposworldframe4 = cubeMove2.objposworldframe4;
         centralobjectposworldframe3 = centralobjectposworldframe4;
         //Object's center point in player's rest frame
         //o4 = new Vector4(this.transform.position.x, this.transform.position.y, this.transform.position.z, -this.transform.position.magnitude);
-        Lplayer = cM.Lplayer;//world frame to player's rest frame
-        Lplayerinverse = cM.Lplayerinverse;
+        Lplayer = cameraMove2.Lplayer;//world frame to player's rest frame
+        Lplayerinverse = cameraMove2.Lplayer.inverse;
         //objectposworldframe4 = centralobjectposworldframe4;
         //cM.xx4 is the player's position in player's rest frame
 
@@ -87,12 +87,12 @@ public class Vertex : MonoBehaviour
             Vector3 vv = centralobjectposworldframe3 + vertex;
             //vv4 in world frame
             Vector4 vv4 = vv;
-            vv4.w = cM.playrposworldframe4.w - (cM.playrposworldframe3 - vv).magnitude;
+            vv4.w = cameraMove2.playrposworldframe4.w - (cameraMove2.playrposworldframe3 - vv).magnitude;
             //position of vertices in World Frame4
             /*if (!this.originalVertices.Contains(vertex))
             {*/
             //
-            vertexposplayrrestframe4 = Lplayer * vv4 - cM.Lplayer * cuM.x4;
+            vertexposplayrrestframe4 = Lplayer * vv4 - cameraMove2.Lplayer * cubeMove2.objposworldframe4;
             this.targetVertices.Add(new Vector3(vertexposplayrrestframe4.x, vertexposplayrrestframe4.y, vertexposplayrrestframe4.z));
         }
 

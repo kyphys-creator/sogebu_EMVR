@@ -50,7 +50,7 @@ public class cameraMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         aq = ad.q;
         Quaternion q = transform.rotation.normalized;

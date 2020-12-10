@@ -30,7 +30,7 @@ public class ArrowDirection : MonoBehaviour
     private Vector3 Rp;
     private float t;
     Camera cam;
-    cameraMove cM;
+    cameraMove2 cM;
     GameObject target;
 
     // Start is called before the first frame update
@@ -40,7 +40,7 @@ public class ArrowDirection : MonoBehaviour
         Vector3 tmp = GameObject.Find("Point_charge").transform.position;
         Vector3 tmp2 = GameObject.Find("Point_charge2").transform.position;
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
+        cM = cam.GetComponent<cameraMove2>();
         //Defining a point charge at Rzero.
         Rzero = tmp;
         rzero = tmp2;
@@ -109,7 +109,7 @@ public class ArrowDirection : MonoBehaviour
         f = K(efp, bfp);*/
 
         //referencing lorentzian matrix
-        l = cM.Lplayerinverse;
+        l = cM.Lplayer.inverse;
 
         //Q = F;
         //q = f;

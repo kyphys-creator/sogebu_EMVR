@@ -6,17 +6,17 @@ public class instantiate : MonoBehaviour
 {
     // 弾のPrefabを指定
     public GameObject CubePrefab;
-    cameraMove cM;
+    cameraMove2 cameraMove2;
     Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
         cam = Camera.main;
-        cM = cam.GetComponent<cameraMove>();
-        for (int i = -4; i <= 4; i++)
+        cameraMove2 = cam.GetComponent<cameraMove2>();
+        for (int i = -5; i <= 5; i++)
         {
-            for (int j = -2; j <= 2; j++)
+            for (int j = -5; j <= 5; j++)
             {
                 for (int k = -2; k <= 2; k++)
                 {
