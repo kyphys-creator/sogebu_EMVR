@@ -20,13 +20,17 @@ public class cubeMove2 : MonoBehaviour
     private Matrix4x4 metrictensor;
 
     Camera player;
+    public GameObject metric;
+
     cameraMove2 cameraMove2;
+    GeneralRelmetric GeneralRelmetric;
     // Start is called before the first frame update
     void Start()
     {
         //importing ArrowDirection for Electromagnetic Effects
         player = Camera.main;
         cameraMove2 = player.GetComponent<cameraMove2>();
+        GeneralRelmetric = metric.GetComponent<GeneralRelmetric>();
         //
         playrposworldframe4 = cameraMove2.playrposworldframe4;
         playrposworldframe3 = playrposworldframe4;

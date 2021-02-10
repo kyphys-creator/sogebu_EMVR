@@ -39,9 +39,9 @@ public class BDirection2 : MonoBehaviour
         pointcharge2posworldframe3 = cubeMove2pointcharge2.objposworldframe3;
 
         //Electric charge of the point source.
-        q1 = 0.0f;
+        q1 = 1.0f;
         q2 = 0.0f;
-        m1 = 1.0f;
+        m1 = 0.0f;
         m2 = 0.0f;
 
         //an Arrow's Position Vector mesured from Each point source in World frame
@@ -49,11 +49,11 @@ public class BDirection2 : MonoBehaviour
         Vector3 R = cubeMove2pointcharge2.Lobject * rR(cubeMove2.objposworldframe3, pointcharge2posworldframe3);
 
         //Creating Electromagnetic Tensor for an Arrow's position in world frame
-        Matrix4x4 F1 = cubeMove2pointcharge1.Lobject * K(field(cubeMove2pointcharge1.Lobject * r, q1), field(cubeMove2pointcharge1.Lobject * r, m1)) * cubeMove2pointcharge1.Lobject.transpose;
-        Matrix4x4 F2 = cubeMove2pointcharge2.Lobject * K(field(cubeMove2pointcharge1.Lobject * R, q2), field(cubeMove2pointcharge1.Lobject * R, m2)) * cubeMove2pointcharge2.Lobject.transpose;
+        Matrix4x4 F1 = cubeMove2pointcharge1.Lobject.inverse * K(field(cubeMove2pointcharge1.Lobject * r, q1), field(cubeMove2pointcharge1.Lobject * r, m1)) * cubeMove2pointcharge1.Lobject.inverse;
+        Matrix4x4 F2 = cubeMove2pointcharge2.Lobject.inverse * K(field(cubeMove2pointcharge1.Lobject * R, q2), field(cubeMove2pointcharge1.Lobject * R, m2)) * cubeMove2pointcharge2.Lobject.inverse;
         F = Sum(F1, F2);
         //Creating Electromagnetic Tensor for an Arrow's position in Player's rest frame
-        Matrix4x4 f = cameraMove2.Lplayer.transpose * F * cameraMove2.Lplayer;
+        Matrix4x4 f = cameraMove2.Lplayer * F * cameraMove2.Lplayer;
 
         bfield = new Vector3(f.m12, f.m20, f.m01);
         this.transform.localScale = new Vector3(1, bfield.magnitude / 10, 1);
@@ -87,11 +87,11 @@ public class BDirection2 : MonoBehaviour
         Vector3 R = cubeMove2pointcharge2.Lobject * rR(cubeMove2.objposworldframe3, pointcharge2posworldframe3);
 
         //Creating Electromagnetic Tensor for an Arrow's position in world frame
-        Matrix4x4 F1 = cubeMove2pointcharge1.Lobject * K(field(cubeMove2pointcharge1.Lobject * r, q1), field(cubeMove2pointcharge1.Lobject * r, m1)) * cubeMove2pointcharge1.Lobject.transpose;
-        Matrix4x4 F2 = cubeMove2pointcharge2.Lobject * K(field(cubeMove2pointcharge1.Lobject * R, q2), field(cubeMove2pointcharge1.Lobject * R, m2)) * cubeMove2pointcharge2.Lobject;
+        Matrix4x4 F1 = cubeMove2pointcharge1.Lobject.inverse * K(field(cubeMove2pointcharge1.Lobject * r, q1), field(cubeMove2pointcharge1.Lobject * r, m1)) * cubeMove2pointcharge1.Lobject.inverse;
+        Matrix4x4 F2 = cubeMove2pointcharge2.Lobject.inverse * K(field(cubeMove2pointcharge1.Lobject * R, q2), field(cubeMove2pointcharge1.Lobject * R, m2)) * cubeMove2pointcharge2.Lobject.inverse;
         F = Sum(F1, F2);
         //Creating Electromagnetic Tensor for an Arrow's position in Player's rest frame
-        Matrix4x4 f = cameraMove2.Lplayer.transpose * F * cameraMove2.Lplayer;
+        Matrix4x4 f = cameraMove2.Lplayer * F * cameraMove2.Lplayer;
 
         bfield = new Vector3(f.m12, f.m20, f.m01);
         this.transform.localScale = new Vector3(1, bfield.magnitude / 20, 1);

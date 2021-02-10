@@ -20,15 +20,17 @@ public class cameraMove2 : MonoBehaviour
     private float qoverm;
     private float unitAccel;
     ArrowDirection2 ArrowDirection2;
+    GeneralRelmetric GeneralRelmetric;
 
     public GameObject emfields;
+    public GameObject metric;
 
     // Start is called before the first frame update
     void Start()
     {
         //importing ArrowDirection for Electromagnetic Effects
         ArrowDirection2 = emfields.GetComponent<ArrowDirection2>();
-
+        GeneralRelmetric = metric.GetComponent<GeneralRelmetric>();
         //defining rotation matrix
         R = Matrix4x4.identity;
 
@@ -46,11 +48,12 @@ public class cameraMove2 : MonoBehaviour
         Lplayer = Matrix4x4.identity;
 
         //defining metric tensor
-        metrictensor = Matrix4x4.identity;
-        metrictensor.m33 = -1;
+        //metrictensor = Matrix4x4.identity;
+        //metrictensor.m33 = -1;
+        metrictensor = GeneralRelmetric.metrictensor;
 
         //defining effective chargeovermass of player
-        qoverm = -0.05f;
+        qoverm = 0.0f;
 
         //defining unit acceleration
         unitAccel = 0.1f;
