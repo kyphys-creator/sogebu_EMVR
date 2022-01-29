@@ -56,7 +56,7 @@ public class BDirection2 : MonoBehaviour
         Matrix4x4 f = cameraMove2.Lplayer * F * cameraMove2.Lplayer;
 
         bfield = new Vector3(f.m12, f.m20, f.m01);
-        this.transform.localScale = new Vector3(1, bfield.magnitude / 10, 1);
+        this.transform.localScale = new Vector3(1, Mathf.Log10(Mathf.Abs(1.0f + bfield.magnitude)), 1);
 
         if (vp(bfield, new Vector3(0, 0, 1)) == new Vector3(0, 0, 0))
         {
@@ -94,7 +94,7 @@ public class BDirection2 : MonoBehaviour
         Matrix4x4 f = cameraMove2.Lplayer * F * cameraMove2.Lplayer;
 
         bfield = new Vector3(f.m12, f.m20, f.m01);
-        this.transform.localScale = new Vector3(1, bfield.magnitude / 20, 1);
+        this.transform.localScale = new Vector3(1, Mathf.Log10(Mathf.Abs(1.0f + bfield.magnitude)), 1);
 
         if (vp(bfield, new Vector3(0, 0, 1)) == new Vector3(0, 0, 0))
         {
